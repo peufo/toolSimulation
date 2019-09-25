@@ -3,14 +3,22 @@
 	import { onMount } from 'svelte'
 	import { getHeader } from './utils'
 	import Tool from './Tool.svelte'
+	import Article from './Article.svelte'
 
-	//A mettre dans ./Tools.svelte ?
 	let tools = []
-	$: console.log(tools)
+	$: console.log('Tools : ', tools)
+
+	let articles = []
+	$: console.log('Articles : ', articles)
+
 
 	onMount(() => {
 		getTools()
+		getArticles()
 	})
+
+
+	//Tools
 
 	async function getTools() {
 		let res = await fetch('/tools')
@@ -18,7 +26,7 @@
 		tools = json
 	}
 
-	async function create(newTool) {
+	async function createTool(newTool) {
 		if (!newTool.label) newTool = {label: 'Mon nouvel outil', params: [], measures: []}
 
 		let res = await fetch('/tools', getHeader(newTool))
@@ -30,13 +38,12 @@
 		}
 	}
 
-	function createChild(e) {
-		console.log(e)
+	function createToolChild(e) {
 		let newTool = {label: 'Mon nouvel outil', params: [], measures: [], root: e.detail._id}
-		create(newTool)
+		createTool(newTool)
 	}
 
-	async function remove(e) {
+	async function removeTool(e) {
 		let _id = e.detail._id
 		let res = await fetch(`/tools/remove`, getHeader({_id}))
 		let json = await res.json()
@@ -51,16 +58,70 @@
 		}
 	}
 
+
+	//Articles
+
+	async function getArticles() {
+		let res = await fetch('/articles')
+		let json = await res.json()
+		articles = json
+	}
+	async function createArticle(e) {
+		let res = await fetch('/articles', getHeader({}))
+		let json = await res.json()
+		if (json.error) {
+			console.log(json.message)
+		}else{
+			articles = [...articles, json]
+		}
+	}
+
+	async function removeArticle(e) {
+		let _id = e.detail._id
+		let res = await fetch(`/articles/remove`, getHeader({_id}))
+		let json = await res.json()
+		if (json.error) {
+			console.log(json.message)
+		}else {
+			let index = articles.map(t => t._id).indexOf(_id)
+			if (index != -1) {
+				articles.splice(index, 1)
+				articles = articles
+			}
+		}
+	}
+
+
 </script>
 
-<div class="w3-padding">
-	<span class="w3-opacity"><i class="fas fa-robot"></i> Outils</span><br>
+<div class="w3-padding w3-row">
 
-	{#each tools.filter(t => !t.root) as tool}
-		<Tool bind:tool bind:tools on:remove={remove} on:createChild={createChild}/>		
-	{/each}
+	<div class="w3-col m6">
+		<div class="w3-center">
+			<span class="w3-opacity"><i class="fas fa-robot"></i> Outils</span><br>
+		</div>
 
-	<div class="w3-button w3-border w3-round w3-margin-top w3-right" on:click={create}>
-		+1 <i class="fa fa-robot"></i>
+		{#each tools.filter(t => !t.root) as tool}
+			<Tool bind:tool bind:tools on:remove={removeTool} on:createChild={createToolChild}/>		
+		{/each}
+
+		<div class="w3-button w3-border w3-round w3-margin-top w3-right" on:click={createTool}>
+			+1 <i class="fa fa-robot"></i>
+		</div>
 	</div>
+
+	<div class="w3-col m6">
+		<div class="w3-center">
+			<span class="w3-opacity"><i class="fas fa-cube"></i> Articles</span><br>
+		</div>
+
+		{#each articles as article}
+			<Article bind:article on:remove={removeArticle}/>		
+		{/each}
+
+		<div class="w3-button w3-border w3-round w3-margin-top w3-right" on:click={createArticle}>
+			+1 <i class="fas fa-cube"></i>
+		</div>
+	</div>
+
 </div>

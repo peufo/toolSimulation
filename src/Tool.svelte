@@ -1,6 +1,5 @@
 <script>
     import AutoPatch from './AutoPatch.svelte'
-
 	import { createEventDispatcher } from 'svelte'
     const dispatch = createEventDispatcher()
     
@@ -51,7 +50,7 @@
                             </select>
                         </td>
                     </tr>
-                {/each}
+                {/each}        
                 </table>
 
                 <!-- Add Button-->
@@ -107,6 +106,7 @@
             <svelte:self bind:tool={child} bind:tools on:remove on:createChild/>
         {/each}
         <br>
+
         <div class="w3-button w3-border w3-round w3-right addButton" on:click={createChild}>
             +1 <i class="fas fa-robot"></i>
         </div>
@@ -116,34 +116,5 @@
 </div>
 
 <style>
-    input {
-        max-width: 230px;
-    }
-
-    select {
-        transform: translate(0px, 1.5px);
-    }
-
-    .title {
-        transform: translate(0px, -1.4em);
-        color: rgba(0, 0, 0, .6)
-    }
-    .title span {
-        background: white;
-    }
-
-    .addButton {
-        background: white;
-        transform: translate(0px, -10px);
-    }
-
-    .fa-times {
-        cursor: pointer;
-        transition: all .2s;
-    }
-    .fa-times:hover {
-        color: red;
-        transform: scale(1.15)
-    }
 
 </style>

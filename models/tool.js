@@ -8,11 +8,11 @@ var tool = new mongoose.Schema({
     params: [{
         label: String,
         value: Number,
-        unite: { type:String, enum: unites, default: 'mm' }
+        unite: { type: String, enum: unites, default: 'mm' }
     }],
     measures: [{
         label: String,
-        unite: { type:String, enum: unites, default: 'mm' }
+        unite: { type: String, enum: unites, default: 'mm' }
     }]
 })
 
