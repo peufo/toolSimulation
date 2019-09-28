@@ -1,16 +1,16 @@
 var mongoose = require('mongoose')
 
 var action = new mongoose.Schema({
-    label: { type: String, required: true, trim: true },
+    label: { type: String, required: true, trim: true, default: 'Mon action' },
     article: {type: mongoose.Types.ObjectId, ref: 'action'},
-    position: {type: Number, required: true},
+    position: {type: Number, required: true, default: 10},
     features: [{
-        label: { type: String, required: true, trim: true },
+        label: { type: String, trim: true },
         origine: String,
         mesure: String,
         nominal: String,
         tolerance: Number,
-        representation: {type: String, enum: ['SPC'], default: 'SPC'},
+        representation: {type: String, enum: ['SPC', 'without'], default: 'SPC'},
         param: {type: mongoose.Types.ObjectId, ref: 'tool.params'},
         measure: {type: mongoose.Types.ObjectId, ref: 'tool.measures'},
     }]

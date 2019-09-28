@@ -11,10 +11,14 @@
 	let articles = []
 	$: console.log('Articles : ', articles)
 
+	let actions = []
+	$: console.log('Actions : ', actions)
+
 
 	onMount(() => {
 		getTools()
 		getArticles()
+		getActions()
 	})
 
 
@@ -60,12 +64,12 @@
 
 
 	//Articles
-
 	async function getArticles() {
 		let res = await fetch('/articles')
 		let json = await res.json()
 		articles = json
 	}
+
 	async function createArticle(e) {
 		let res = await fetch('/articles', getHeader({}))
 		let json = await res.json()
@@ -91,6 +95,37 @@
 		}
 	}
 
+	//Actions
+	async function getActions() {
+		let res = await fetch('/actions')
+		let json = await res.json()
+		actions = json
+	}
+
+	async function createAction(e) {
+		let res = await fetch('/actions', getHeader({article: e.detail._id}))
+		let json = await res.json()
+		if (json.error) {
+			console.log(json.message)
+		}else{
+			actions = [...actions, json]
+		}
+	}
+
+	async function removeAction(e) {
+		let _id = e.detail._id
+		let res = await fetch(`/actions/remove`, getHeader({_id}))
+		let json = await res.json()
+		if (json.error) {
+			console.log(json.message)
+		}else {
+			let index = actions.map(a => a._id).indexOf(_id)
+			if (index != -1) {
+				actions.splice(index, 1)
+				actions = actions
+			}
+		}
+	}
 
 </script>
 
@@ -116,7 +151,7 @@
 		</div>
 
 		{#each articles as article}
-			<Article bind:article on:remove={removeArticle}/>		
+			<Article bind:article bind:actions on:remove={removeArticle} on:createAction={createAction} on:removeAction={removeAction}/>		
 		{/each}
 
 		<div class="w3-button w3-border w3-round w3-margin-top w3-right" on:click={createArticle}>

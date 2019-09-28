@@ -70,7 +70,7 @@
                 <div class="title w3-center"><span><i class="fas fa-ruler"></i> Mesures</span></div>
 
                 <table style="width: 300px;">
-                {#each tool.measures as measure}
+                {#each tool.measures as measure, i}
                     <tr>
                         <td>
                             <input class="w3-input" type="text" bind:value={measure.label} placeholder="Ma mesure">
@@ -81,6 +81,10 @@
                                     <option value={unite}>{unite}</option>
                                 {/each}
                             </select>
+                        </td>
+                        <td>
+                            <!-- Supprimer -->
+                            <i class="fa fa-times" on:click="{() => {tool.measures.splice(i, 1); tool = tool;}}"></i>
                         </td>
                     </tr>
                 {/each}
