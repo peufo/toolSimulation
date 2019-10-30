@@ -11,8 +11,8 @@ var action = new mongoose.Schema({
         nominal: String,
         tolerance: Number,
         representation: {type: String, enum: ['SPC', 'without'], default: 'SPC'},
-        param: {type: mongoose.Types.ObjectId, ref: 'tool.params'},
-        measure: {type: mongoose.Types.ObjectId, ref: 'tool.measures'},
+        params: [{type: mongoose.Schema.Types.ObjectId, ref: 'tool.params'}],
+        measures: [{type: mongoose.Schema.Types.ObjectId, ref: 'tool.measures'}],
     }]
 })
 

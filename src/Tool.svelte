@@ -6,7 +6,7 @@
     export let tools = []
     export let tool = {}
 
-    let unites = ['mm', 'bool', 'eval']
+    let unites = ['mm', 'bool', 'eval', 'N', 'un', 'sec']
 
     function remove() {
         dispatch('remove', {_id: tool._id})

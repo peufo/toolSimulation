@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
 
-unites = ['mm', 'bool', 'eval'] //evaluation jugement de 1 à 10
+unites = ['mm', 'bool', 'eval', 'N', 'un', 'sec'] //evaluation jugement de 1 à 10
 
 var tool = new mongoose.Schema({
     label: { type: String, required: true, trim: true },

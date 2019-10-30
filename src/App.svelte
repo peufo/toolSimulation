@@ -14,6 +14,11 @@
 	let actions = []
 	$: console.log('Actions : ', actions)
 
+	let params = [] //map de tools
+	let measures = [] //map de tools
+	$: console.log('params : ', params)
+	$: console.log('measures : ', measures)
+
 
 	onMount(() => {
 		getTools()
@@ -28,6 +33,23 @@
 		let res = await fetch('/tools')
 		let json = await res.json()
 		tools = json
+
+		params = []
+		measures = []
+		tools.forEach(tool => {
+			params = [
+				...params,
+				...tool.params.map(param => {
+					return {_id: param._id, label: `${tool.label} - ${param.label}`}
+				})
+			]
+			measures = [
+				...measures,
+				...tool.measures.map(param => {
+					return {_id: param._id, label: `${tool.label} - ${param.label}`}
+				})
+			]
+		})
 	}
 
 	async function createTool(newTool) {
@@ -151,7 +173,7 @@
 		</div>
 
 		{#each articles as article}
-			<Article bind:article bind:actions on:remove={removeArticle} on:createAction={createAction} on:removeAction={removeAction}/>		
+			<Article bind:article bind:actions bind:params bind:measures on:remove={removeArticle} on:createAction={createAction} on:removeAction={removeAction}/>		
 		{/each}
 
 		<div class="w3-button w3-border w3-round w3-margin-top w3-right" on:click={createArticle}>

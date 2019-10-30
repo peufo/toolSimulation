@@ -5,6 +5,8 @@
 
     export let article = {}
     export let actions = []
+    export let params = []
+    export let measures = []
 
     function createAction() {
         dispatch('createAction', {_id: article._id})
@@ -26,6 +28,8 @@
                 origine: '',
                 mesure: '',
                 nominal: '',
+                params: [],
+                measures: [],
                 tolerance: null,
                 representation: 'without'
             }]
@@ -37,6 +41,20 @@
         if (index != -1) {
             actions[index].features.splice(featureIndex, 1)
             actions = actions
+        }
+    }
+
+    function createParams(actionId, featureIndex) {
+        let index = actions.map(a => a._id).indexOf(actionId)
+        if (index != -1) {
+            actions[index].features[featureIndex].params = [...actions[index].features[featureIndex].params, params[0]._id]
+        }
+    }
+
+    function createMeasures(actionId, featureIndex) {
+        let index = actions.map(a => a._id).indexOf(actionId)
+        if (index != -1) {
+            actions[index].features[featureIndex].measures = [...actions[index].features[featureIndex].measures, measures[0]._id]
         }
     }
 
@@ -72,8 +90,6 @@
                 <div class="w3-border w3-padding w3-round w3-margin-top">
                     <!-- Title -->
                     <div class="title w3-center"><span><i class="fas fa-stamp"></i> Caractéristiques</span></div>
-
-                    
 
                     {#each action.features as feature, i}
 
@@ -111,13 +127,20 @@
 
                                         <!-- Title-->
                                         <div class="title w3-center"><span><i class="far fa-edit"></i> Paramètres</span></div>
-
+                                        
                                         <!-- Content -->
-
+                                        {#each feature.params as fParam}
+                                            <select class="w3-input " bind:value={fParam}>
+                                            {#each params as param}
+                                                <option value="{param._id}">{param.label}</option>
+                                            {/each}
+                                            </select>
+                                        {/each}
+                                        
 
                                         <!-- Add Button-->
                                         <br>
-                                        <div class="w3-button w3-border w3-round w3-right addButton" on:click="{() => {}}">
+                                        <div class="w3-button w3-border w3-round w3-right addButton" on:click="{() => createParams(action._id, i)}">
                                             +1 <i class="far fa-edit"></i>
                                         </div>
                                     </div>
@@ -130,11 +153,17 @@
                                         <div class="title w3-center"><span><i class="fas fa-ruler"></i> Mesures</span></div>
 
                                         <!-- Content -->
-
+                                        {#each feature.measures as fMeasure}
+                                            <select class="w3-input " bind:value={fMeasure}>
+                                            {#each measures as measure}
+                                                <option value="{measure._id}">{measure.label}</option>
+                                            {/each}
+                                            </select>
+                                        {/each}
 
                                         <!-- Add Button-->
                                         <br>
-                                        <div class="w3-button w3-border w3-round w3-right addButton" on:click="{() => {}}">
+                                        <div class="w3-button w3-border w3-round w3-right addButton" on:click="{() => createMeasures(action._id, i)}">
                                             +1 <i class="fas fa-ruler"></i>
                                         </div>
                                     </div>

@@ -4,8 +4,16 @@ var Tool = require('../models/tool')
 
 router
 	.get('/', (req, res, next) => {
-        Tool.find(req.query, (err, tools) => {
+        Tool.find(req.query).lean().exec((err, tools) => {
             if (err) return next(err)
+            tools.forEach(tool => {
+                tool.params.forEach(param => {
+                    param.tool = tool.label
+                })
+                tool.measures.forEach(measure => {
+                    measure.tool = tool.label
+                })
+            })
             res.json(tools)
         })
     })
